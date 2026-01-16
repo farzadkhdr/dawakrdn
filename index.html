@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی ناردنی داواکاری - فرۆشتنی خانوو</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .main-menu {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .menu-item.active {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+        }
+        
+        .menu-item i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .menu-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .coming-soon {
+            background-color: #f0f0f0;
+            color: #888;
+            position: relative;
+        }
+        
+        .coming-soon:after {
+            content: "لە وەشانی داهاتوو";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff9800;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            font-size: 24px;
+            color: #1e3c72;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: #2a5298;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.1);
+        }
+        
+        .select-wrapper {
+            position: relative;
+        }
+        
+        .select-wrapper:after {
+            content: "▼";
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none;
+        }
+        
+        select.form-input {
+            appearance: none;
+            padding-left: 40px;
+        }
+        
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        
+        .size-option {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .size-option:hover {
+            background-color: #f0f7ff;
+            border-color: #2a5298;
+        }
+        
+        .size-option.selected {
+            background-color: #2a5298;
+            color: white;
+            border-color: #2a5298;
+        }
+        
+        .price-input-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .price-label {
+            background-color: #f0f0f0;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-radius: 0 6px 6px 0;
+            color: #666;
+        }
+        
+        .price-input {
+            border-radius: 6px 0 0 6px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.3s;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .ads-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .ads-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #1e3c72;
+            text-align: center;
+        }
+        
+        .ads-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .ad-item {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .ad-img {
+            height: 180px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .ad-content {
+            padding: 15px;
+        }
+        
+        .ad-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .ad-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #666;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-menu {
+                flex-direction: column;
+            }
+            
+            .size-options {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">سیستەمی فرۆشتنی خانوو و زەوی</div>
+        <div class="tagline">فرۆشتنی خانوو و زەوی بە ئاسانترین شێوە</div>
+    </header>
+    
+    <div class="main-menu">
+        <div class="menu-item">
+            <i class="fas fa-home"></i>
+            <h3>کڕینی خانوو</h3>
+            <p>داواکاری کڕینی خانوو</p>
+        </div>
+        
+        <div class="menu-item active">
+            <i class="fas fa-house-user"></i>
+            <h3>فرۆشتنی خانوو</h3>
+            <p>داواکاری فرۆشتنی خانوو</p>
+        </div>
+        
+        <div class="menu-item coming-soon">
+            <i class="fas fa-mountain"></i>
+            <h3>کڕینی زەوی</h3>
+            <p>داواکاری کڕینی زەوی</p>
+        </div>
+        
+        <div class="menu-item coming-soon">
+            <i class="fas fa-flag"></i>
+            <h3>فرۆشتنی زەوی</h3>
+            <p>داواکاری فرۆشتنی زەوی</p>
+        </div>
+    </div>
+    
+    <div class="form-container">
+        <h2 class="form-title">فرۆشتنی خانوو</h2>
+        
+        <form id="houseSellingForm">
+            <div class="form-group">
+                <label class="form-label">ژمارەی موبایلی خۆت بنووسە تا پەیوەندیت پێوە بکرێ لە لایەن کۆمپانیا :</label>
+                <input type="tel" class="form-input" placeholder="٠٧٧٠ ١٢٣ ٤٥٦٧" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">ناوی بەرێزت :</label>
+                <input type="text" class="form-input" placeholder="لەم بۆشایە بنووسە" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">شوێنەکە دیاری بکە کە خانوەکەت لێی دەفرۆشیت:</label>
+                <div class="select-wrapper">
+                    <select class="form-input" required>
+                        <option value="">شوێنەکەت هەڵبژێرە</option>
+                        <option value="شۆرش">شۆرش</option>
+                        <option value="شارێ یۆنانی">شارێ یۆنانی</option>
+                        <option value="کوێستان(قادسیە)">کوێستان(قادسیە)</option>
+                        <option value="سێوەکە">سێوەکە</option>
+                        <option value="ئارام گاردن">ئارام گاردن</option>
+                        <option value="کانی">کانی</option>
+                        <option value="ئیمپایەر رۆیاڵ ئەپارتمێنت">ئیمپایەر رۆیاڵ ئەپارتمێنت</option>
+                        <option value="خوێندنی باڵا">خوێندنی باڵا</option>
+                        <option value="قەرەبوی کارێز">قەرەبوی کارێز</option>
+                        <option value="کورانی نوێ">کورانی نوێ</option>
+                        <option value="بەختیاری نوێ">بەختیاری نوێ</option>
+                        <option value="ئازادی بەحرکە">ئازادی بەحرکە</option>
+                        <option value="برایەتی بەحرکە">برایەتی بەحرکە</option>
+                        <option value="گوڵان ستی">گوڵان ستی</option>
+                        <option value="کۆمەڵگەی ژین (بەحرکە)">کۆمەڵگەی ژین (بەحرکە)</option>
+                        <!-- Other options continue here -->
+                        <option value="مەلا یاسین">مەلا یاسین</option>
+                        <option value="ڤێلاکانی ئۆکلاند">ڤێلاکانی ئۆکلاند</option>
+                        <option value="ئەربیل گاردن">ئەربیل گاردن</option>
+                        <option value="ڤانە تاوەرز">ڤانە تاوەرز</option>
+                        <option value="ئۆلیڤ گاردن ستی">ئۆلیڤ گاردن ستی</option>
+                        <option value="بەحرکەی نوێ">بەحرکەی نوێ</option>
+                        <option value="سەیدان B">سەیدان B</option>
+                        <option value="میراج ستی">میراج ستی</option>
+                        <option value="خەرابەدراو">خەرابەدراو</option>
+                        <option value="دارەبەن">دارەبەن</option>
+                        <option value="فەرمان بەرانی (بەحرکە)">فەرمان بەرانی (بەحرکە)</option>
+                        <option value="ڕاستی (بەحرکە)">ڕاستی (بەحرکە)</option>
+                        <option value="دارەتوی نوێ">دارەتوی نوێ</option>
+                        <option value="بنەسڵاوە">بنەسڵاوە</option>
+                        <option value="ئاری">ئاری</option>
+                        <option value="دیلان">دیلان</option>
+                        <option value="99 زانکۆ">99 زانکۆ</option>
+                        <option value="زیلان ستی">زیلان ستی</option>
+                        <option value="94 باداوە">94 باداوە</option>
+                        <option value="کارێزان">کارێزان</option>
+                        <option value="ئەدرێس ئەربیل">ئەدرێس ئەربیل</option>
+                        <option value="بیڤرلی هیڵز">بیڤرلی هیڵز</option>
+                        <option value="سەربەستی نوێ (8ی تورەق)">سەربەستی نوێ (8ی تورەق)</option>
+                        <option value="شارەوانی">شارەوانی</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">فرۆشتنی خانوو : جۆری فرۆشتنی خانوو هەڵبژێرە</label>
+                <div style="display: flex; gap: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="radio" name="saleType" value="تاپۆ" checked>
+                        <span>تاپۆ</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="radio" name="saleType" value="کارت">
+                        <span>کارت</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">قەبارە (مەتر) : قەبارە هەڵبژێرە</label>
+                <div class="size-options" id="sizeOptions">
+                    <!-- Size options will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">نرخی خانووەکە چەندە ؟ بە پێی رۆژ دیاری دەکرێ نرخی خانوەکە :</label>
+                <div class="price-input-container">
+                    <input type="number" class="form-input price-input" placeholder="نرخی خانوەکە" required>
+                    <span class="price-label">دینار</span>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> ناردنی داواکاری
+            </button>
+        </form>
+    </div>
+    
+    <div class="ads-section">
+        <h3 class="ads-title">ڕێکلامەکان</h3>
+        <div class="ads-container">
+            <div class="ad-item">
+                <div class="ad-img">
+                    <i class="fas fa-home fa-3x"></i>
+                </div>
+                <div class="ad-content">
+                    <div class="ad-title">فەرۆشی خانووی لوكس</div>
+                    <div class="ad-description">خانووی لوكس لە شاری هەولێر بە نرخی تایبەت</div>
+                </div>
+            </div>
+            
+            <div class="ad-item">
+                <div class="ad-img">
+                    <i class="fas fa-building fa-3x"></i>
+                </div>
+                <div class="ad-content">
+                    <div class="ad-title">ئەپارتمێنت لە ناوەند</div>
+                    <div class="ad-description">ئەپارتمێنت لە ناوەندی شاری هەولێر</div>
+                </div>
+            </div>
+            
+            <div class="ad-item">
+                <div class="ad-img">
+                    <i class="fas fa-handshake fa-3x"></i>
+                </div>
+                <div class="ad-content">
+                    <div class="ad-title">ئاسانکاری فرۆشتنی خانوو</div>
+                    <div class="ad-description">هەموو پرۆسەی فرۆشتنی خانوو ئاسان دەکەین</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 سیستەمی فرۆشتنی خانوو و زەوی. هەموو مافەکان پارێزراوە.</p>
+    </footer>
+    
+    <script>
+        // Generate size options
+        const sizeOptionsContainer = document.getElementById('sizeOptions');
+        const sizes = [];
+        
+        for (let i = 100; i <= 1000; i += 25) {
+            sizes.push(i);
+        }
+        
+        sizes.forEach(size => {
+            const sizeOption = document.createElement('div');
+            sizeOption.className = 'size-option';
+            sizeOption.textContent = `${size}م`;
+            sizeOption.dataset.size = size;
+            
+            sizeOption.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.size-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                
+                // You can also set a hidden input value if needed
+            });
+            
+            sizeOptionsContainer.appendChild(sizeOption);
+        });
+        
+        // Form submission
+        document.getElementById('houseSellingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const phone = this.querySelector('input[type="tel"]').value;
+            const name = this.querySelector('input[type="text"]').value;
+            const location = this.querySelector('select').value;
+            const saleType = this.querySelector('input[name="saleType"]:checked').value;
+            const size = document.querySelector('.size-option.selected')?.dataset.size;
+            const price = this.querySelector('input[type="number"]').value;
+            
+            // Validate
+            if (!phone || !name || !location || !saleType || !size || !price) {
+                alert('تکایە هەموو خانەکان پر بکەرەوە');
+                return;
+            }
+            
+            // Create request object
+            const requestData = {
+                phone,
+                name,
+                location,
+                saleType,
+                size: `${size} مەتر`,
+                price: `${price} دینار`,
+                date: new Date().toLocaleDateString('ku'),
+                status: 'چاوەروان'
+            };
+            
+            // In a real application, you would send this data to an API
+            // For now, we'll just show a success message and log the data
+            console.log('داواکاری نێردرا:', requestData);
+            
+            // Show success message
+            alert('داواکاریەکەت بە سەرکەوتوویی نێردرا! پەیوەندیمان پێوە دەکەین لەم ژمارەیەیە: ' + phone);
+            
+            // Reset form
+            this.reset();
+            document.querySelectorAll('.size-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+        });
+        
+        // Menu item click handlers
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Don't do anything for "coming soon" items
+                if (this.classList.contains('coming-soon')) {
+                    alert('ئەم بەشە لە وەشانی داهاتوو بەردەست دەبێت!');
+                    return;
+                }
+                
+                // Remove active class from all menu items
+                document.querySelectorAll('.menu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Update form title based on selected menu
+                const title = this.querySelector('h3').textContent;
+                document.querySelector('.form-title').textContent = title;
+            });
+        });
+    </script>
+</body>
+</html>
