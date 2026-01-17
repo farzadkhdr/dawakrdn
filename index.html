@@ -3,8 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستەمی ناردنی داواکاری</title>
+    <title>سیستەمی ناردنی داواکاری - فرۆشتنی خانوو</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --text-color: #333;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #166088;
+            --secondary-color: #0d3b66;
+            --accent-color: #17a2b8;
+            --light-color: #343a40;
+            --dark-color: #f8f9fa;
+            --text-color: #f8f9fa;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,426 +34,1258 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: var(--light-color);
+            color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
+            transition: var(--transition);
         }
 
         .container {
-            max-width: 600px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 0 20px;
         }
 
-        h1 {
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: var(--secondary-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background-color: var(--accent-color);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            min-height: 70vh;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
             text-align: center;
-            color: #166088;
-            margin-bottom: 30px;
+            margin-bottom: 2.5rem;
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            position: relative;
             padding-bottom: 15px;
-            border-bottom: 3px solid #17a2b8;
+        }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.8rem;
         }
 
-        label {
+        .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.7rem;
             font-weight: 600;
-            color: #166088;
+            color: var(--primary-color);
+            font-size: 1.1rem;
         }
 
-        input, select {
+        .form-input, .form-select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
+            padding: 0.9rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+            color: var(--text-color);
         }
 
-        input:focus, select:focus {
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-color);
             outline: none;
-            border-color: #17a2b8;
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.2);
+        }
+
+        .form-hint {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #666;
         }
 
         .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: #17a2b8;
+            background-color: var(--accent-color);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.3s;
+            transition: var(--transition);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 2rem auto 0;
         }
 
         .submit-btn:hover {
-            background: #138496;
+            background-color: #138496;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
         }
 
         .submit-btn:disabled {
-            background: #ccc;
+            background-color: #ccc;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .loading {
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-link {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Hidden Sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Autocomplete Styles */
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            right: 0;
+            left: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #d4d4d4;
+            color: var(--dark-color);
+        }
+
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+
+        .autocomplete-active {
+            background-color: var(--accent-color) !important;
+            color: white !important;
+        }
+
+        /* Advertisement Styles */
+        .ads-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .ad-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .ad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .ad-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .ad-card:hover .ad-image img {
+            transform: scale(1.05);
+        }
+
+        .ad-content {
+            padding: 1.5rem;
+        }
+
+        .ad-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .ad-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .ad-link {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .ad-link:hover {
+            background-color: #138496;
+        }
+
+        .no-ads {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 400px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background-color: #28a745;
+        }
+
+        .notification.error {
+            background-color: #dc3545;
+        }
+
+        .notification.warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .notification.info {
+            background-color: var(--accent-color);
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+
+        .notification.warning .notification-close {
+            color: #333;
+        }
+
+        /* Loading Spinner */
+        .spinner {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .message {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 6px;
-            text-align: center;
+        .submit-btn .spinner {
+            margin-right: 5px;
         }
 
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
+        /* API Status */
         .api-status {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-size: 0.85rem;
+            z-index: 1000;
             display: flex;
             align-items: center;
             gap: 8px;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .online {
-            background: #d4edda;
+        .api-status.online {
+            background-color: #d4edda;
             color: #155724;
         }
 
-        .offline {
-            background: #f8d7da;
+        .api-status.offline {
+            background-color: #f8d7da;
             color: #721c24;
+        }
+
+        .api-status i {
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>فرۆشتنی خانوو</h1>
-        
-        <form id="houseSaleForm">
-            <div class="form-group">
-                <label for="mobile">ژمارەی موبایل:</label>
-                <input type="tel" id="mobile" placeholder="٠٧٧٠ ١٢٣ ٤٥٦٧" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="name">ناو:</label>
-                <input type="text" id="name" placeholder="ناوی تۆمار بکە" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="location">شوێن:</label>
-                <input type="text" id="location" placeholder="شوێنەکەت بنووسە" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="saleType">جۆری فرۆشتنی خانوو:</label>
-                <select id="saleType" required>
-                    <option value="">هەڵبژێرە</option>
-                    <option value="تاپۆ">تاپۆ</option>
-                    <option value="کارت">کارت</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="size">قەبارە (مەتر):</label>
-                <select id="size" required>
-                    <option value="">هەڵبژێرە</option>
-                    <option value="100">100 م²</option>
-                    <option value="150">150 م²</option>
-                    <option value="200">200 م²</option>
-                    <option value="250">250 م²</option>
-                    <option value="300">300 م²</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="price">نرخی خانووەکە (دینار):</label>
-                <input type="number" id="price" placeholder="50000000" required>
-            </div>
-            
-            <button type="submit" class="submit-btn" id="submitBtn">
-                ناردنی داواکاری
-            </button>
-        </form>
-        
-        <div id="message" class="message" style="display: none;"></div>
+    <!-- API Status Indicator -->
+    <div id="apiStatus" class="api-status" style="display: none;">
+        <i class="fas fa-circle"></i>
+        <span>بارگەی API</span>
     </div>
-    
-    <div id="apiStatus" class="api-status" style="display: none;"></div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                <span>سیستەمی ناردنی داواکاری</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="main">
+                        <i class="fas fa-home"></i>
+                        بەشی سەرەکی
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="house-sale">
+                        <i class="fas fa-house-user"></i>
+                        فرۆشتنی خانوو
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="house-buy">
+                        <i class="fas fa-search-dollar"></i>
+                        کڕینی خانوو
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="land-sale">
+                        <i class="fas fa-mountain"></i>
+                        فرۆشتنی زەوی
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="land-buy">
+                        <i class="fas fa-flag"></i>
+                        کڕینی زەوی
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="advertisements">
+                        <i class="fas fa-ad"></i>
+                        رێکلامەکان
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Main Page -->
+        <section id="main-page" class="page-section active main-content">
+            <h1 class="page-title">بەخێربێن بۆ سیستەمی ناردنی داواکاری</h1>
+            <div class="form-container">
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">
+                    ئەم سیستەمە بۆ ناردنی داواکاری بۆ کڕین و فرۆشتنی خانوو و زەویە. تکایە لە لیستەی خوارەوە بەشی ئەو داواکاریە هەڵبژێرە کە دەتەوێت.
+                </p>
+                
+                <div class="form-group" style="text-align: center;">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+                        <div class="service-card" style="background: linear-gradient(135deg, #4a6fa5, #166088); color: white; padding: 2rem; border-radius: var(--border-radius); width: 250px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.1); cursor: pointer;" onclick="navigateToPage('house-sale')">
+                            <i class="fas fa-house-user" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3 style="margin-bottom: 1rem;">فرۆشتنی خانوو</h3>
+                            <p>داواکاری فرۆشتنی خانوو</p>
+                        </div>
+                        
+                        <div class="service-card" style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 2rem; border-radius: var(--border-radius); width: 250px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.1); cursor: pointer;" onclick="navigateToPage('house-buy')">
+                            <i class="fas fa-search-dollar" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3 style="margin-bottom: 1rem;">کڕینی خانوو</h3>
+                            <p>داواکاری کڕینی خانوو</p>
+                        </div>
+                        
+                        <div class="service-card" style="background: linear-gradient(135deg, #28a745, #1e7e34); color: white; padding: 2rem; border-radius: var(--border-radius); width: 250px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.1); cursor: pointer;" onclick="navigateToPage('advertisements')">
+                            <i class="fas fa-ad" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3 style="margin-bottom: 1rem;">رێکلامەکان</h3>
+                            <p>بینینی رێکلامەکان</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">وێبسایتەکان:</h3>
+                    <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                        <a href="https://systamwargrtn.vercel.app" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: var(--accent-color); text-decoration: none; font-weight: 500;">
+                            <i class="fas fa-external-link-alt"></i>
+                            سیستەمی بەڕێوەبردنی داواکاری
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- House Sale Page -->
+        <section id="house-sale-page" class="page-section main-content">
+            <h1 class="page-title">فرۆشتنی خانوو</h1>
+            
+            <form id="houseSaleForm" class="form-container">
+                <!-- Mobile Number -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-mobile-alt"></i>
+                        ژمارەی موبایلی خۆت بنووسە تا پەیوەندیت پێوە بکرێ لە لایەن کۆمپانیا:
+                    </label>
+                    <input type="tel" class="form-input" id="mobile" name="mobile" placeholder="٠٧٧٠ ١٢٣ ٤٥٦٧" required>
+                    <span class="form-hint">ژمارەی موبایل بە شێوازی کوردی بنووسە</span>
+                </div>
+                
+                <!-- Name -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i>
+                        ناوی بەرێزت:
+                    </label>
+                    <input type="text" class="form-input" id="name" name="name" placeholder="ناوی تۆمار بکە" required>
+                </div>
+                
+                <!-- Location -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        شوێنەکە دیاری بکە کە خانوەکەت لێی دەفرۆشیت:
+                    </label>
+                    <input type="text" class="form-input" id="location" name="location" placeholder="شوێنەکەت بنووسە یان هەڵیبژێرە" required autocomplete="off">
+                    <span class="form-hint">لە کاتی نوسین پێشنیار دەکرێت</span>
+                    <div id="locationAutocomplete" class="autocomplete-items"></div>
+                </div>
+                
+                <!-- Sale Type -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-tag"></i>
+                        جۆری فرۆشتنی خانوو هەڵبژێرە:
+                    </label>
+                    <select class="form-select" id="saleType" name="saleType" required>
+                        <option value="">جۆری فرۆشتن هەڵبژێرە</option>
+                        <option value="تاپۆ">تاپۆ</option>
+                        <option value="کارت">کارت</option>
+                    </select>
+                </div>
+                
+                <!-- Size -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-ruler-combined"></i>
+                        هەڵبژاردنی قەبارە (مەتر):
+                    </label>
+                    <select class="form-select" id="size" name="size" required>
+                        <option value="">قەبارەی خانوەکەت هەڵبژێرە</option>
+                        <option value="100">100 م²</option>
+                        <option value="125">125 م²</option>
+                        <option value="150">150 م²</option>
+                        <option value="175">175 م²</option>
+                        <option value="200">200 م²</option>
+                        <option value="225">225 م²</option>
+                        <option value="250">250 م²</option>
+                        <option value="275">275 م²</option>
+                        <option value="300">300 م²</option>
+                        <option value="325">325 م²</option>
+                        <option value="350">350 م²</option>
+                        <option value="375">375 م²</option>
+                        <option value="400">400 م²</option>
+                        <option value="425">425 م²</option>
+                        <option value="450">450 م²</option>
+                        <option value="475">475 م²</option>
+                        <option value="500">500 م²</option>
+                        <option value="525">525 م²</option>
+                        <option value="550">550 م²</option>
+                        <option value="575">575 م²</option>
+                        <option value="600">600 م²</option>
+                        <option value="625">625 م²</option>
+                        <option value="650">650 م²</option>
+                        <option value="675">675 م²</option>
+                        <option value="700">700 م²</option>
+                        <option value="725">725 م²</option>
+                        <option value="750">750 م²</option>
+                        <option value="775">775 م²</option>
+                        <option value="800">800 م²</option>
+                        <option value="825">825 م²</option>
+                        <option value="850">850 م²</option>
+                        <option value="875">875 م²</option>
+                        <option value="900">900 م²</option>
+                        <option value="925">925 م²</option>
+                        <option value="950">950 م²</option>
+                        <option value="975">975 م²</option>
+                        <option value="1000">1000 م²</option>
+                    </select>
+                </div>
+                
+                <!-- Price -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        نرخی خانووەکە چەندە؟ بە پێی رۆژ دیاری دەکرێ:
+                    </label>
+                    <input type="number" class="form-input" id="price" name="price" placeholder="نرخی خانوەکە بە دینار" required>
+                    <span class="form-hint">نرخ بە دیناری عێراقی بنووسە</span>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitHouseSaleBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    ناردنی داواکاری
+                </button>
+            </form>
+            
+            <!-- Response Message -->
+            <div id="responseMessage" class="form-container" style="display: none;">
+                <h2 style="color: var(--accent-color); text-align: center; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                    داواکاریەکەت بە سەرکەوتویی نێردرا!
+                </h2>
+                <p style="text-align: center;">
+                    زانیاریەکانت وەرگیرا و لە ماوەی ٢٤ کاتژمێری دا پەیوەندیت پێوە دەکرێت لەلایەن کارمەندانی کۆمپانیا.
+                </p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="resetFormAndGoToMain()" class="submit-btn" style="background-color: var(--primary-color);">
+                        <i class="fas fa-home"></i>
+                        گەڕانەوە بۆ سەرەکی
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other Sections (Placeholders) -->
+        <section id="house-buy-page" class="page-section main-content">
+            <h1 class="page-title">کڕینی خانوو</h1>
+            <div class="form-container">
+                <p style="text-align: center; font-size: 1.2rem;">
+                    ئەم بەشە لە وەشانی داهاتوو زیاد دەکرێت.
+                </p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="navigateToPage('main')" class="submit-btn" style="background-color: var(--primary-color);">
+                        <i class="fas fa-arrow-right"></i>
+                        گەڕانەوە بۆ سەرەکی
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="land-sale-page" class="page-section main-content">
+            <h1 class="page-title">فرۆشتنی زەوی</h1>
+            <div class="form-container">
+                <p style="text-align: center; font-size: 1.2rem;">
+                    ئەم بەشە لە وەشانی داهاتوو زیاد دەکرێت.
+                </p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="navigateToPage('main')" class="submit-btn" style="background-color: var(--primary-color);">
+                        <i class="fas fa-arrow-right"></i>
+                        گەڕانەوە بۆ سەرەکی
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="land-buy-page" class="page-section main-content">
+            <h1 class="page-title">کڕینی زەوی</h1>
+            <div class="form-container">
+                <p style="text-align: center; font-size: 1.2rem;">
+                    ئەم بەشە لە وەشانی داهاتوو زیاد دەکرێت.
+                </p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="navigateToPage('main')" class="submit-btn" style="background-color: var(--primary-color);">
+                        <i class="fas fa-arrow-right"></i>
+                        گەڕانەوە بۆ سەرەکی
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Advertisements Page -->
+        <section id="advertisements-page" class="page-section main-content">
+            <h1 class="page-title">رێکلامەکان</h1>
+            
+            <div class="form-container">
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">
+                    ئەمە لیستی هەموو رێکلامەکانی کۆمپانیاکەمانە. ئەگەر پێویستت بە زانیاری زیاترە، پەیوەندیمان پێوە بکە.
+                </p>
+                
+                <!-- Advertisements will be loaded here -->
+                <div id="advertisements-container" class="ads-container">
+                    <!-- Ads will be dynamically loaded here -->
+                    <div class="no-ads">
+                        <i class="fas fa-ad" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #666;">هێشتا هیچ رێکلامێک نییە</h3>
+                        <p>رێکلامەکان بەخێرایی زیاد دەکرێن...</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                    <button onclick="navigateToPage('main')" class="submit-btn" style="background-color: var(--primary-color);">
+                        <i class="fas fa-arrow-right"></i>
+                        گەڕانەوە بۆ سەرەکی
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                <span>سیستەمی ناردنی داواکاری</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link" onclick="navigateToPage('main')">سەرەکی</a>
+                <a href="#" class="footer-link" onclick="navigateToPage('house-sale')">فرۆشتنی خانوو</a>
+                <a href="#" class="footer-link" onclick="navigateToPage('advertisements')">رێکلامەکان</a>
+            </div>
+            
+            <p class="copyright">
+                &copy; <span id="currentYear"></span> سیستەمی ناردنی داواکاری. هەموو مافەکان پارێزراون.
+            </p>
+        </div>
+    </footer>
 
     <script>
+        // API Configuration
         const API_BASE_URL = 'https://systamwargrtn.vercel.app';
-        const form = document.getElementById('houseSaleForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const messageDiv = document.getElementById('message');
-        const apiStatus = document.getElementById('apiStatus');
 
-        // تاقیکردنەوەی API
-        async function testAPI() {
-            try {
-                console.log('🔍 تاقیکردنەوەی پەیوەندی بە API...');
-                
-                // تاقیکردنەوەی سادە
-                const testData = {
-                    name: "تەست",
-                    mobile: "07701234567",
-                    location: "شۆرش",
-                    type: "فرۆشتنی خانوو",
-                    size: "150",
-                    price: "50000000",
-                    saleType: "تاپۆ"
-                };
-                
-                console.log('📤 ناردنی داتا:', testData);
-                
-                // ٣ ڕێگەی جیاواز تاقی دەکەین
-                console.log('🔄 تاقیکردنەوەی ڕێگەی ١: JSON POST');
-                try {
-                    const response1 = await fetch(`${API_BASE_URL}/api/requests`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(testData)
-                    });
-                    console.log('✅ ڕێگەی ١: وەڵام=', response1.status);
-                    if (response1.ok) {
-                        const result = await response1.json();
-                        console.log('✅ سەرکەوتوو:', result);
-                        return true;
-                    }
-                } catch (e1) {
-                    console.log('❌ ڕێگەی ١ شکستی هێنا:', e1.message);
-                }
-                
-                console.log('🔄 تاقیکردنەوەی ڕێگەی ٢: FormData');
-                try {
-                    const formData = new FormData();
-                    Object.keys(testData).forEach(key => {
-                        formData.append(key, testData[key]);
-                    });
+        // Location data for autocomplete
+        const locations = [
+            "شۆرش", "شارێ یۆنانی", "کوێستان(قادسیە)", "سێوەکە", "ئارام گاردن", "کانی", 
+            "ئیمپایەر رۆیاڵ ئەپارتمێنت", "خوێندنی باڵا", "قەرەبوی کارێز", "کورانی نوێ", 
+            "بەختیاری نوێ", "ئازادی بەحرکە", "برایەتی بەحرکە", "گوڵان ستی", 
+            "کۆمەڵگەی ژین (بەحرکە)", "مەلا یاسین", "ڤێلاکانی ئۆکلاند", "ئەربیل گاردن", 
+            "ڤانە تاوەرز", "ئۆلیڤ گاردن ستی", "بەحرکەی نوێ", "سەیدان B", "میراج ستی", 
+            "خەرابەدراو", "دارەبەن", "فەرمان بەرانی (بەحرکە)", "ڕاستی (بەحرکە)", 
+            "دارەتوی نوێ", "بنەسڵاوە", "ئاری", "دیلان", "99 زانکۆ", "زیلان ستی", 
+            "94 باداوە", "کارێزان", "ئەدرێس ئەربیل", "بیڤرلی هیڵز", "سەربەستی نوێ (8ی تورەق)", 
+            "سەیدان", "جیدە", "قۆپەقران", "ڵایف تاوەرز", "قەرەبووی کەلەکین", 
+            "کرێچیانی شاوێس", "قەرەبووی شاوێس", "پیشەسازی باشور", "لالاڤ سەن تاوەرز", 
+            "نیو ئیسکان", "نایس ڤیلەج", "کوین تاوەر", "شاری سانا", "چنار (شورتاوە)", 
+            "407 عنکاوە", "حاکماوا", "عەنکاوە 128", "سیمی خاتوناوە", "121 گوڵان (گوڵان 1)", 
+            "زانایان", "سەروەران", "پێشمەرگە (تاپۆ)", "ئاڵتون ستی", "سێبەردان 2", 
+            "هەڤاڵان", "دارەتوو", "ئاڵاسکا تاوەرز", "کەڕک(تاپۆ)", "گەرەسۆری کارت", 
+            "گەرەسۆر", "گەرەسۆری تەعجیل", "گوندی ئەمریکی", "هەواری شار", "دوبەی ستی", 
+            "تیمار", "ڕووناکی", "موفتی", "ئەندازیاران", "مەنتکاوە", "شادی و بەهاری نوێ", 
+            "منارە سیتی 2", "ماردین", "کوردستان", "ئایندە ستی 2", "ئایندە ستی 1", 
+            "هەولێر ستی", "فلۆرێنس تاوەر", "سینترۆ تاوەر", "ئۆزال ستی", "هیران ستی", 
+            "لانە ستی", "شاری ئەندازیاران", "ژیان ستی", "سەری بڵند", "ڕاستی (عەدالە)", 
+            "لەندەن تاوەرز", "زەیتون ستی", "رۆشنبیری 1", "ئاشۆکان", "نەورۆز (حەی عەسکەری)", 
+            "14 کونە گورگ", "مارینا 1", "مارینا 2", "مارینa 3", "فیوچەر ستی", 
+            "پێشەنگ پلەس تاوەرز", "ماس ستی", "فلۆریا ستی", "شاری هەرشەم 3", "زێڕین ستی", 
+            "ئۆلیڤ ستی", "قەرەبووی رەشکین (زەوییەکانی تێرمیناڵ)", "ڤارسان", "قەرەبوی گەنجان", 
+            "زین ستی", "ژین", "کوردستان ستی", "نۆبڵ ستی", "فیردەوس ستی", 
+            "شاری ژیانی (هاوچەرخ)", "ڤار پارک", "باغمرە شهاب", "دیپلۆماتی سەفیران", 
+            "سلاڤا ستی", "پاڤلیۆن", "گەزنەی نوێ", "قەرەبووی گرد جوتیار", "بێریات", 
+            "عەزە", "عارەب کەند", "هیوا ستی", "147 عنکاوە", "کانی قرژاڵە", "گرد جوتیار", 
+            "هەولێری نوێ", "8 حەسارۆک", "5 حەسارۆک", "فەرمان بەران", "بەختیاری", 
+            "وەزیران (پەرلەمان)", "گوندی زانکۆی نوێ", "مامۆستایانی زانکۆ", "شارەوانی"
+        ];
+
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageSections = document.querySelectorAll('.page-section');
+        const locationInput = document.getElementById('location');
+        const locationAutocomplete = document.getElementById('locationAutocomplete');
+        const houseSaleForm = document.getElementById('houseSaleForm');
+        const responseMessage = document.getElementById('responseMessage');
+        const submitHouseSaleBtn = document.getElementById('submitHouseSaleBtn');
+        const advertisementsContainer = document.getElementById('advertisements-container');
+        const apiStatus = document.getElementById('apiStatus');
+        const notificationContainer = document.getElementById('notificationContainer');
+        const currentYearElement = document.getElementById('currentYear');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year
+            currentYearElement.textContent = new Date().getFullYear();
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.querySelector('i').className = 'fas fa-sun';
+            }
+            
+            // Check API status
+            checkApiStatus();
+            
+            // Load advertisements if on ads page
+            if (window.location.hash === '#advertisements') {
+                navigateToPage('advertisements');
+            }
+            
+            // Show house sale page by default (as per requirement)
+            document.querySelector('[data-page="house-sale"]').click();
+        });
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const icon = themeToggle.querySelector('i');
+            
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Navigation
+        function navigateToPage(pageId) {
+            navLinks.forEach(navLink => navLink.classList.remove('active'));
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            
+            pageSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === `${pageId}-page`) {
+                    section.classList.add('active');
                     
-                    const response2 = await fetch(`${API_BASE_URL}/api/requests`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    console.log('✅ ڕێگەی ٢: وەڵام=', response2.status);
-                    if (response2.ok) return true;
-                } catch (e2) {
-                    console.log('❌ ڕێگەی ٢ شکستی هێنا:', e2.message);
+                    // Add animation
+                    section.style.opacity = '0';
+                    section.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        section.style.opacity = '1';
+                        section.style.transform = 'translateY(0)';
+                    }, 50);
+                    
+                    // Load advertisements if on ads page
+                    if (pageId === 'advertisements') {
+                        loadAdvertisements();
+                    }
                 }
+            });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateToPage(link.getAttribute('data-page'));
+            });
+        });
+
+        // Location Autocomplete
+        locationInput.addEventListener('input', function() {
+            const inputVal = this.value;
+            locationAutocomplete.innerHTML = '';
+            
+            if (!inputVal) return;
+            
+            const filteredLocations = locations.filter(loc => 
+                loc.includes(inputVal)
+            );
+            
+            filteredLocations.forEach(loc => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${loc.substring(0, inputVal.length)}</strong>${loc.substring(inputVal.length)}`;
+                div.addEventListener('click', function() {
+                    locationInput.value = loc;
+                    locationAutocomplete.innerHTML = '';
+                });
+                locationAutocomplete.appendChild(div);
+            });
+        });
+
+        // Close autocomplete when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== 'location') {
+                locationAutocomplete.innerHTML = '';
+            }
+        });
+
+        // API Status Check
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
                 
-                console.log('🔄 تاقیکردنەوەی ڕێگەی ٣: GET پەیوەندی');
-                try {
-                    const params = new URLSearchParams(testData).toString();
-                    const response3 = await fetch(`${API_BASE_URL}/api/requests?${params}`, {
-                        method: 'GET'
-                    });
-                    console.log('✅ ڕێگەی ٣: وەڵام=', response3.status);
-                    if (response3.ok) return true;
-                } catch (e3) {
-                    console.log('❌ ڕێگەی ٣ شکستی هێنا:', e3.message);
+                if (response.ok) {
+                    apiStatus.className = 'api-status online';
+                    apiStatus.innerHTML = '<i class="fas fa-circle"></i> API چالاکە';
+                    apiStatus.style.display = 'flex';
+                    return true;
+                } else {
+                    throw new Error('API ناچالاکە');
                 }
-                
-                return false;
-                
             } catch (error) {
-                console.error('💥 تاقیکردنەوەی API شکستی هێنا:', error);
+                apiStatus.className = 'api-status offline';
+                apiStatus.innerHTML = '<i class="fas fa-circle"></i> API ناچالاکە';
+                apiStatus.style.display = 'flex';
+                console.warn('API ناچالاکە:', error);
                 return false;
             }
         }
 
-        // ناردنی فۆرم
-        form.addEventListener('submit', async function(e) {
+        // Show Notification
+        function showNotification(message, type = 'info', duration = 5000) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+                <button class="notification-close">&times;</button>
+            `;
+            
+            notificationContainer.appendChild(notification);
+            
+            // Close button
+            notification.querySelector('.notification-close').addEventListener('click', () => {
+                notification.remove();
+            });
+            
+            // Auto remove after duration
+            if (duration > 0) {
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, duration);
+            }
+            
+            return notification;
+        }
+
+        // Form Submission - House Sale
+        houseSaleForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // وەرگرتنی داتا
+            // Get form data
             const formData = {
                 name: document.getElementById('name').value,
-                mobile: document.getElementById('mobile').value.replace(/[^0-9]/g, ''),
+                mobile: document.getElementById('mobile').value,
                 location: document.getElementById('location').value,
-                type: "فرۆشتنی خانوو",
+                type: 'فرۆشتنی خانوو',
                 size: document.getElementById('size').value,
                 price: document.getElementById('price').value,
                 saleType: document.getElementById('saleType').value
             };
             
-            // پشکنینی داتا
-            if (!formData.name || !formData.mobile || !formData.location || 
-                !formData.saleType || !formData.size || !formData.price) {
-                showMessage('تکایە هەموو خانەکان پڕ بکەرەوە', 'error');
+            // Validate form
+            if (!formData.name || !formData.mobile || !formData.location || !formData.saleType || !formData.size || !formData.price) {
+                showNotification('تکایە هەموو خانەکان پڕ بکەرەوە', 'error');
                 return;
             }
             
-            // دەستکاریکردنی بەرگە
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading"></span> لە ناردنە...';
-            
-            // ناردن بە ڕێگەی جیاواز
-            let success = false;
-            let errorMessage = '';
+            // Disable submit button and show loading
+            const originalText = submitHouseSaleBtn.innerHTML;
+            submitHouseSaleBtn.innerHTML = '<span class="spinner"></span> لە ناردنە...';
+            submitHouseSaleBtn.disabled = true;
             
             try {
-                console.log('🚀 دەستپێکردنی ناردن...');
+                // Check API status first
+                const apiIsOnline = await checkApiStatus();
                 
-                // ڕێگەی ١: JSON (ئاسایی)
-                try {
-                    console.log('🔵 تاقیکردنەوەی ڕێگەی JSON...');
-                    const response = await fetch(`${API_BASE_URL}/api/requests`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    });
-                    
-                    console.log('📥 وەڵام وەرگیرا:', response.status);
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        console.log('✅ سەرکەوتوو:', result);
-                        success = true;
-                    } else {
-                        const errorText = await response.text();
-                        console.error('❌ هەڵە:', errorText);
-                        errorMessage = `سێرڤەر وەڵامی ${response.status} داوە`;
-                    }
-                } catch (jsonError) {
-                    console.error('❌ JSON هەڵە:', jsonError.message);
-                    errorMessage = jsonError.message;
+                if (!apiIsOnline) {
+                    showNotification('API ناچالاکە. تکایە دووبارە هەوڵ بدەرەوە یان پەیوەندیمان پێوە بکە.', 'error');
+                    submitHouseSaleBtn.innerHTML = originalText;
+                    submitHouseSaleBtn.disabled = false;
+                    return;
                 }
                 
-                // ئەگەر JSON شکستی هێنا، FormData تاقی بکە
-                if (!success) {
-                    console.log('🟡 تاقیکردنەوەی ڕێگەی FormData...');
-                    try {
-                        const fd = new FormData();
-                        Object.keys(formData).forEach(key => {
-                            fd.append(key, formData[key]);
-                        });
-                        
-                        const fdResponse = await fetch(`${API_BASE_URL}/api/requests`, {
-                            method: 'POST',
-                            body: fd
-                        });
-                        
-                        console.log('📥 FormData وەڵام:', fdResponse.status);
-                        
-                        if (fdResponse.ok) {
-                            success = true;
-                        } else {
-                            const fdError = await fdResponse.text();
-                            errorMessage = `FormData: ${fdResponse.status} - ${fdError}`;
-                        }
-                    } catch (fdError) {
-                        console.error('❌ FormData هەڵە:', fdError);
-                    }
-                }
+                // Send request to API
+                const response = await fetch(`${API_BASE_URL}/api/requests`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
                 
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    showNotification('داواکاریەکەت بە سەرکەوتویی نێردرا!', 'success');
+                    
+                    // Hide form and show success message
+                    houseSaleForm.style.display = 'none';
+                    responseMessage.style.display = 'block';
+                    
+                    // Reset form after 10 seconds
+                    setTimeout(() => {
+                        houseSaleForm.reset();
+                        houseSaleForm.style.display = 'block';
+                        responseMessage.style.display = 'none';
+                        navigateToPage('main');
+                    }, 10000);
+                } else {
+                    showNotification(`هەڵە: ${result.error || 'هەڵەیەکی نەناسراو ڕوویدا'}`, 'error');
+                    submitHouseSaleBtn.innerHTML = originalText;
+                    submitHouseSaleBtn.disabled = false;
+                }
             } catch (error) {
-                console.error('💥 هەڵەی گشتی:', error);
-                errorMessage = error.message;
+                console.error('هەڵە لە ناردنی داواکاری:', error);
+                showNotification('پەیوەندی بە سێرڤەرەوە شکستی هێنا. تکایە دووبارە هەوڵ بدەرەوە.', 'error');
+                submitHouseSaleBtn.innerHTML = originalText;
+                submitHouseSaleBtn.disabled = false;
             }
-            
-            // پاشکەوتی دەرئەنجام
-            if (success) {
-                showMessage('✅ داواکاریەکەت بە سەرکەوتویی نێردرا!', 'success');
-                form.reset();
-            } else {
-                showMessage(`❌ هەڵە: ${errorMessage || 'پەیوەندی بە سێرڤەرەوە شکستی هێنا'}`, 'error');
-            }
-            
-            // گەڕاندنەوەی بەرگە
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'ناردنی داواکاری';
         });
 
-        // نیشاندانی پەیام
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            }
-        }
-
-        // پشکنینی ئەنجامی API
-        async function checkAPI() {
+        // Load Advertisements
+        async function loadAdvertisements() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/health`);
-                if (response.ok) {
-                    apiStatus.textContent = 'API چالاکە';
-                    apiStatus.className = 'api-status online';
-                } else {
-                    apiStatus.textContent = 'API ناچالاکە';
-                    apiStatus.className = 'api-status offline';
+                // Show loading state
+                advertisementsContainer.innerHTML = `
+                    <div class="no-ads">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--primary-color);">رێکلامەکان بار دەکرێن...</h3>
+                    </div>
+                `;
+                
+                // Check API status
+                const apiIsOnline = await checkApiStatus();
+                
+                if (!apiIsOnline) {
+                    advertisementsContainer.innerHTML = `
+                        <div class="no-ads">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ffc107; margin-bottom: 1rem;"></i>
+                            <h3 style="color: #666;">API ناچالاکە</h3>
+                            <p>ناتواندرێت رێکلامەکان بار بکرێن. تکایە دووبارە هەوڵ بدەرەوە.</p>
+                        </div>
+                    `;
+                    return;
                 }
-                apiStatus.style.display = 'flex';
-            } catch (error) {
-                apiStatus.textContent = 'API ناچالاکە';
-                apiStatus.className = 'api-status offline';
-                apiStatus.style.display = 'flex';
-            }
-        }
-
-        // دەستپێکردن
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAPI();
-            
-            // تاقیکردنەوەی API لەسەر بارکردن
-            setTimeout(() => {
-                testAPI().then(result => {
-                    if (result) {
-                        console.log('🎉 تاقیکردنەوەی API سەرکەوتوو بوو!');
-                    } else {
-                        console.log('⚠️ تاقیکردنەوەی API شکستی هێنا!');
-                        showMessage('⚠️ تاقیکردنەوەی API شکستی هێنا. لەوانەیە کێشەی CORS هەبێت.', 'error');
+                
+                // Fetch advertisements from API
+                const response = await fetch(`${API_BASE_URL}/api/advertisements`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
                     }
                 });
-            }, 1000);
-        });
+                
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    // Display advertisements
+                    displayAdvertisements(result.data);
+                } else {
+                    advertisementsContainer.innerHTML = `
+                        <div class="no-ads">
+                            <i class="fas fa-ad" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                            <h3 style="color: #666;">هێشتا هیچ رێکلامێک نییە</h3>
+                            <p>رێکلامەکان بەم زووانە زیاد دەکرێن.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('هەڵە لە وەرگرتنی رێکلامەکان:', error);
+                advertisementsContainer.innerHTML = `
+                    <div class="no-ads">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc3545; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #666;">هەڵە لە وەرگرتنی رێکلامەکان</h3>
+                        <p>تکایە دووبارە هەوڵ بدەرەوە یان پەیوەندیمان پێوە بکە.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display Advertisements
+        function displayAdvertisements(ads) {
+            advertisementsContainer.innerHTML = '';
+            
+            ads.forEach(ad => {
+                const adElement = document.createElement('div');
+                adElement.className = 'ad-card';
+                adElement.innerHTML = `
+                    ${ad.image ? `
+                    <div class="ad-image">
+                        <img src="${API_BASE_URL}${ad.image}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
+                    </div>
+                    ` : ''}
+                    <div class="ad-content">
+                        <h3 class="ad-title">${ad.title}</h3>
+                        ${ad.description ? `<p class="ad-description">${ad.description}</p>` : ''}
+                        ${ad.link ? `
+                        <a href="${ad.link}" target="_blank" class="ad-link" onclick="trackAdClick('${ad.id}')">
+                            <i class="fas fa-external-link-alt"></i>
+                            بینینی زیاتر
+                        </a>
+                        ` : ''}
+                        <div style="margin-top: 1rem; font-size: 0.85rem; color: #888; display: flex; justify-content: space-between;">
+                            <span><i class="far fa-eye"></i> ${ad.views || 0} بینین</span>
+                            <span><i class="far fa-calendar"></i> ${formatDate(ad.createdAt)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                advertisementsContainer.appendChild(adElement);
+            });
+        }
+
+        // Track Ad Click
+        async function trackAdClick(adId) {
+            try {
+                await fetch(`${API_BASE_URL}/api/advertisements/${adId}/click`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (error) {
+                console.error('هەڵە لە تۆمارکردنی کلیک:', error);
+            }
+        }
+
+        // Format Date
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ku');
+        }
+
+        // Reset Form and Go to Main
+        function resetFormAndGoToMain() {
+            houseSaleForm.reset();
+            houseSaleForm.style.display = 'block';
+            responseMessage.style.display = 'none';
+            navigateToPage('main');
+        }
+
+        // Auto-check API status every 30 seconds
+        setInterval(checkApiStatus, 30000);
     </script>
 </body>
 </html>
