@@ -878,8 +878,8 @@
     </footer>
 
     <script>
-        // API Configuration
-        const API_BASE_URL = 'https://systamwargrtn.vercel.app';
+        // API Configuration - ✅ گۆڕانکاری ئێرە بووە
+        const API_BASE_URL = 'https://systamwargrtn.vercel.app/api';
 
         // Location data for autocomplete
         const locations = [
@@ -903,7 +903,7 @@
             "هەولێر ستی", "فلۆرێنس تاوەر", "سینترۆ تاوەر", "ئۆزال ستی", "هیران ستی", 
             "لانە ستی", "شاری ئەندازیاران", "ژیان ستی", "سەری بڵند", "ڕاستی (عەدالە)", 
             "لەندەن تاوەرز", "زەیتون ستی", "رۆشنبیری 1", "ئاشۆکان", "نەورۆز (حەی عەسکەری)", 
-            "14 کونە گورگ", "مارینا 1", "مارینا 2", "مارینa 3", "فیوچەر ستی", 
+            "14 کونە گورگ", "مارینا 1", "مارینا 2", "مارینا 3", "فیوچەر ستی", 
             "پێشەنگ پلەس تاوەرز", "ماس ستی", "فلۆریا ستی", "شاری هەرشەم 3", "زێڕین ستی", 
             "ئۆلیڤ ستی", "قەرەبووی رەشکین (زەوییەکانی تێرمیناڵ)", "ڤارسان", "قەرەبوی گەنجان", 
             "زین ستی", "ژین", "کوردستان ستی", "نۆبڵ ستی", "فیردەوس ستی", 
@@ -1033,7 +1033,7 @@
         // API Status Check
         async function checkApiStatus() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/health`, {
+                const response = await fetch(`${API_BASE_URL}/health`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
@@ -1123,8 +1123,8 @@
                     return;
                 }
                 
-                // Send request to API
-                const response = await fetch(`${API_BASE_URL}/api/requests`, {
+                // Send request to API - ✅ پەیوەندی بە APIەوە
+                const response = await fetch(`${API_BASE_URL}/requests`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1132,6 +1132,11 @@
                     },
                     body: JSON.stringify(formData)
                 });
+                
+                // Check if response is OK
+                if (!response.ok) {
+                    throw new Error(`هەڵە لە API: ${response.status}`);
+                }
                 
                 const result = await response.json();
                 
@@ -1188,17 +1193,22 @@
                     return;
                 }
                 
-                // Fetch advertisements from API
-                const response = await fetch(`${API_BASE_URL}/api/advertisements`, {
+                // Fetch advertisements from API - ✅ پەیوەندی ڕاست
+                const response = await fetch(`${API_BASE_URL}/advertisements`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
                     }
                 });
                 
+                // Check if response is OK
+                if (!response.ok) {
+                    throw new Error(`هەڵە لە API: ${response.status}`);
+                }
+                
                 const result = await response.json();
                 
-                if (result.success && result.data.length > 0) {
+                if (result.success && result.data && result.data.length > 0) {
                     // Display advertisements
                     displayAdvertisements(result.data);
                 } else {
@@ -1229,14 +1239,27 @@
             ads.forEach(ad => {
                 const adElement = document.createElement('div');
                 adElement.className = 'ad-card';
+                
+                // دروستکردنی لینکی وێنە
+                let imageUrl = '';
+                if (ad.image) {
+                    if (ad.image.startsWith('http')) {
+                        imageUrl = ad.image;
+                    } else if (ad.image.startsWith('/')) {
+                        imageUrl = `https://systamwargrtn.vercel.app${ad.image}`;
+                    } else {
+                        imageUrl = `https://systamwargrtn.vercel.app/${ad.image}`;
+                    }
+                }
+                
                 adElement.innerHTML = `
                     ${ad.image ? `
                     <div class="ad-image">
-                        <img src="${API_BASE_URL}${ad.image}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
+                        <img src="${imageUrl}" alt="${ad.title || 'رێکلام'}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
                     </div>
                     ` : ''}
                     <div class="ad-content">
-                        <h3 class="ad-title">${ad.title}</h3>
+                        <h3 class="ad-title">${ad.title || 'بێ ناونیشان'}</h3>
                         ${ad.description ? `<p class="ad-description">${ad.description}</p>` : ''}
                         ${ad.link ? `
                         <a href="${ad.link}" target="_blank" class="ad-link" onclick="trackAdClick('${ad.id}')">
@@ -1258,7 +1281,7 @@
         // Track Ad Click
         async function trackAdClick(adId) {
             try {
-                await fetch(`${API_BASE_URL}/api/advertisements/${adId}/click`, {
+                await fetch(`${API_BASE_URL}/advertisements/${adId}/click`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1271,9 +1294,13 @@
 
         // Format Date
         function formatDate(dateString) {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ku');
+            if (!dateString) return 'ناوەزانراو';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ku', { year: 'numeric', month: 'long', day: 'numeric' });
+            } catch (error) {
+                return 'ناوەزانراو';
+            }
         }
 
         // Reset Form and Go to Main
