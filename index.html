@@ -568,13 +568,13 @@
         <div class="container">
             <ul class="nav-list">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active" data-page="main">
+                    <a href="#" class="nav-link" data-page="main">
                         <i class="fas fa-home"></i>
                         بەشی سەرەکی
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" data-page="house-sale">
+                    <a href="#" class="nav-link active" data-page="house-sale">
                         <i class="fas fa-house-user"></i>
                         فرۆشتنی خانوو
                     </a>
@@ -610,7 +610,7 @@
     <!-- Main Content -->
     <main class="container">
         <!-- Main Page -->
-        <section id="main-page" class="page-section active main-content">
+        <section id="main-page" class="page-section main-content">
             <h1 class="page-title">بەخێربێن بۆ سیستەمی ناردنی داواکاری</h1>
             <div class="form-container">
                 <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">
@@ -652,7 +652,7 @@
         </section>
 
         <!-- House Sale Page -->
-        <section id="house-sale-page" class="page-section main-content">
+        <section id="house-sale-page" class="page-section active main-content">
             <h1 class="page-title">فرۆشتنی خانوو</h1>
             
             <form id="houseSaleForm" class="form-container">
@@ -880,6 +880,12 @@
     <script>
         // API Configuration
         const API_BASE_URL = 'https://systamwargrtn.vercel.app';
+        const API_ENDPOINTS = {
+            health: `${API_BASE_URL}/api/health`,
+            requests: `${API_BASE_URL}/api/requests`,
+            advertisements: `${API_BASE_URL}/api/advertisements`,
+            trackAd: (adId) => `${API_BASE_URL}/api/advertisements/${adId}/click`
+        };
 
         // Location data for autocomplete
         const locations = [
@@ -947,9 +953,6 @@
             if (window.location.hash === '#advertisements') {
                 navigateToPage('advertisements');
             }
-            
-            // Show house sale page by default (as per requirement)
-            document.querySelector('[data-page="house-sale"]').click();
         });
 
         // Theme Toggle
@@ -1033,7 +1036,7 @@
         // API Status Check
         async function checkApiStatus() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/health`, {
+                const response = await fetch(API_ENDPOINTS.health, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
@@ -1107,6 +1110,14 @@
                 return;
             }
             
+            // Validate mobile number format
+            const mobileRegex = /^07[0-9]{9}$/;
+            const englishMobile = formData.mobile.replace(/[٠١٢٣٤٥٦٧٨٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+            if (!mobileRegex.test(englishMobile)) {
+                showNotification('ژمارەی موبایل نادروستە. دەبێت ١١ ژمارە بێت و بە 07 دەستپێبکات', 'error');
+                return;
+            }
+            
             // Disable submit button and show loading
             const originalText = submitHouseSaleBtn.innerHTML;
             submitHouseSaleBtn.innerHTML = '<span class="spinner"></span> لە ناردنە...';
@@ -1123,8 +1134,11 @@
                     return;
                 }
                 
+                // Convert price to number
+                formData.price = parseInt(formData.price);
+                
                 // Send request to API
-                const response = await fetch(`${API_BASE_URL}/api/requests`, {
+                const response = await fetch(API_ENDPOINTS.requests, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1133,7 +1147,16 @@
                     body: JSON.stringify(formData)
                 });
                 
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API error response:', errorText);
+                    throw new Error(`سێرڤەر وەڵامی ${response.status} داوە`);
+                }
+                
                 const result = await response.json();
+                console.log('API success response:', result);
                 
                 if (result.success) {
                     // Show success message
@@ -1157,7 +1180,7 @@
                 }
             } catch (error) {
                 console.error('هەڵە لە ناردنی داواکاری:', error);
-                showNotification('پەیوەندی بە سێرڤەرەوە شکستی هێنا. تکایە دووبارە هەوڵ بدەرەوە.', 'error');
+                showNotification(`پەیوەندی بە سێرڤەرەوە شکستی هێنا: ${error.message}`, 'error');
                 submitHouseSaleBtn.innerHTML = originalText;
                 submitHouseSaleBtn.disabled = false;
             }
@@ -1189,16 +1212,20 @@
                 }
                 
                 // Fetch advertisements from API
-                const response = await fetch(`${API_BASE_URL}/api/advertisements`, {
+                const response = await fetch(API_ENDPOINTS.advertisements, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
                     }
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`سێرڤەر وەڵامی ${response.status} داوە`);
+                }
+                
                 const result = await response.json();
                 
-                if (result.success && result.data.length > 0) {
+                if (result.success && result.data && result.data.length > 0) {
                     // Display advertisements
                     displayAdvertisements(result.data);
                 } else {
@@ -1229,17 +1256,28 @@
             ads.forEach(ad => {
                 const adElement = document.createElement('div');
                 adElement.className = 'ad-card';
+                
+                // Handle image URL
+                let imageUrl = 'https://via.placeholder.com/300x200?text=رێکلام';
+                if (ad.image) {
+                    if (ad.image.startsWith('http')) {
+                        imageUrl = ad.image;
+                    } else if (ad.image.startsWith('/')) {
+                        imageUrl = API_BASE_URL + ad.image;
+                    } else {
+                        imageUrl = API_BASE_URL + '/' + ad.image;
+                    }
+                }
+                
                 adElement.innerHTML = `
-                    ${ad.image ? `
                     <div class="ad-image">
-                        <img src="${API_BASE_URL}${ad.image}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
+                        <img src="${imageUrl}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
                     </div>
-                    ` : ''}
                     <div class="ad-content">
-                        <h3 class="ad-title">${ad.title}</h3>
+                        <h3 class="ad-title">${ad.title || 'بێ ناو'}</h3>
                         ${ad.description ? `<p class="ad-description">${ad.description}</p>` : ''}
                         ${ad.link ? `
-                        <a href="${ad.link}" target="_blank" class="ad-link" onclick="trackAdClick('${ad.id}')">
+                        <a href="${ad.link}" target="_blank" class="ad-link" onclick="trackAdClick('${ad.id || ''}')">
                             <i class="fas fa-external-link-alt"></i>
                             بینینی زیاتر
                         </a>
@@ -1257,8 +1295,10 @@
 
         // Track Ad Click
         async function trackAdClick(adId) {
+            if (!adId) return;
+            
             try {
-                await fetch(`${API_BASE_URL}/api/advertisements/${adId}/click`, {
+                await fetch(API_ENDPOINTS.trackAd(adId), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1271,9 +1311,13 @@
 
         // Format Date
         function formatDate(dateString) {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ku');
+            if (!dateString) return 'نەزانراو';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ku');
+            } catch (error) {
+                return dateString;
+            }
         }
 
         // Reset Form and Go to Main
@@ -1286,6 +1330,48 @@
 
         // Auto-check API status every 30 seconds
         setInterval(checkApiStatus, 30000);
+        
+        // Test API connection
+        async function testAPI() {
+            try {
+                console.log("دەستپێکردنی تاقیکردنەوەی API...");
+                
+                const testData = {
+                    name: "تەست",
+                    mobile: "07701234567",
+                    location: "شۆرش",
+                    type: "فرۆشتنی خانوو",
+                    size: "150",
+                    price: 50000000,
+                    saleType: "تاپۆ"
+                };
+
+                const response = await fetch(API_ENDPOINTS.requests, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                console.log("وەڵام:", response.status, response.statusText);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("وەڵامی هەڵە:", errorText);
+                    return false;
+                }
+
+                const result = await response.json();
+                console.log("سەرکەوتوو:", result);
+                return true;
+                
+            } catch (error) {
+                console.error('تاقیکردنەوە شکستی هێنا:', error);
+                return false;
+            }
+        }
     </script>
 </body>
 </html>
