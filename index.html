@@ -642,7 +642,7 @@
                 <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
                     <h3 style="color: var(--primary-color); margin-bottom: 1rem;">وێبسایتەکان:</h3>
                     <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                        <a href="https://systamwargrtn.vercel.app" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: var(--accent-color); text-decoration: none; font-weight: 500;">
+                        <a href="https://systamwargrtn-git-main-farzads-projects-912fa130.vercel.app/admin" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: var(--accent-color); text-decoration: none; font-weight: 500;">
                             <i class="fas fa-external-link-alt"></i>
                             سیستەمی بەڕێوەبردنی داواکاری
                         </a>
@@ -878,8 +878,25 @@
     </footer>
 
     <script>
-        // API Configuration
-        const API_BASE_URL = 'https://systamwargrtn.vercel.app';
+        // API Configuration - با لینکی ڕاست بەکاربهێنێ
+        function getApiBaseUrl() {
+            // ئەگەر لەسەر localhost یان 127.0.0.1 بوو
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:3000';
+            }
+            
+            // ئەگەر لەسەر vercel بوو
+            if (window.location.hostname.includes('vercel.app')) {
+                // ئەمە لینکی سێرڤەرەکەتە
+                return 'https://systamwargrtn-git-main-farzads-projects-912fa130.vercel.app';
+            }
+            
+            // لە کاتی تر لەسەر هەمان دۆمەین
+            return window.location.origin;
+        }
+
+        const API_BASE_URL = getApiBaseUrl();
+        console.log('API Base URL:', API_BASE_URL); // بۆ دیاریکردنی کێشە
 
         // Location data for autocomplete
         const locations = [
@@ -1041,6 +1058,7 @@
                 });
                 
                 if (response.ok) {
+                    const result = await response.json();
                     apiStatus.className = 'api-status online';
                     apiStatus.innerHTML = '<i class="fas fa-circle"></i> API چالاکە';
                     apiStatus.style.display = 'flex';
@@ -1096,9 +1114,10 @@
                 mobile: document.getElementById('mobile').value,
                 location: document.getElementById('location').value,
                 type: 'فرۆشتنی خانوو',
-                size: document.getElementById('size').value,
-                price: document.getElementById('price').value,
-                saleType: document.getElementById('saleType').value
+                size: document.getElementById('size').value + ' م²',
+                price: document.getElementById('price').value + ' دینار',
+                saleType: document.getElementById('saleType').value,
+                status: 'new'
             };
             
             // Validate form
@@ -1198,7 +1217,7 @@
                 
                 const result = await response.json();
                 
-                if (result.success && result.data.length > 0) {
+                if (result.success && result.data && result.data.length > 0) {
                     // Display advertisements
                     displayAdvertisements(result.data);
                 } else {
@@ -1227,16 +1246,28 @@
             advertisementsContainer.innerHTML = '';
             
             ads.forEach(ad => {
+                // Build image URL
+                let imageUrl = '';
+                if (ad.image) {
+                    if (ad.image.startsWith('http')) {
+                        imageUrl = ad.image;
+                    } else if (ad.image.startsWith('/')) {
+                        imageUrl = `${API_BASE_URL}${ad.image}`;
+                    } else {
+                        imageUrl = `${API_BASE_URL}/${ad.image}`;
+                    }
+                }
+                
                 const adElement = document.createElement('div');
                 adElement.className = 'ad-card';
                 adElement.innerHTML = `
                     ${ad.image ? `
                     <div class="ad-image">
-                        <img src="${API_BASE_URL}${ad.image}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
+                        <img src="${imageUrl}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300x200?text=رێکلام'">
                     </div>
                     ` : ''}
                     <div class="ad-content">
-                        <h3 class="ad-title">${ad.title}</h3>
+                        <h3 class="ad-title">${ad.title || 'بێ ناونیشان'}</h3>
                         ${ad.description ? `<p class="ad-description">${ad.description}</p>` : ''}
                         ${ad.link ? `
                         <a href="${ad.link}" target="_blank" class="ad-link" onclick="trackAdClick('${ad.id}')">
