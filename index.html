@@ -898,6 +898,43 @@
         const API_BASE_URL = getApiBaseUrl();
         console.log('API Base URL:', API_BASE_URL); // بۆ دیاریکردنی کێشە
 
+        // تاقیکردنەوەی ئەم لینکانەش
+        const TEST_URLS = [
+            'https://systamwargrtn-git-main-farzads-projects-912fa130.vercel.app',
+            'https://systamwargrtn.vercel.app'
+        ];
+
+        // فەنکشنێک بۆ تاقیکردنەوەی API
+        async function testApiUrls() {
+            for (const url of TEST_URLS) {
+                try {
+                    // تاقیبکە لەگەڵ /api/health
+                    let response = await fetch(`${url}/api/health`, { 
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    
+                    if (response.ok) {
+                        console.log(`✅ ${url}/api/health چالاکە`);
+                        return url; // یەکەم لینکی چالاک دەگەڕێنێتەوە
+                    } else {
+                        // تاقیبکە لەگەڵ /health
+                        response = await fetch(`${url}/health`, { 
+                            method: 'GET',
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        if (response.ok) {
+                            console.log(`✅ ${url}/health چالاکە`);
+                            return url;
+                        }
+                    }
+                } catch (error) {
+                    console.log(`❌ ${url} ناچالاکە:`, error.message);
+                }
+            }
+            return null;
+        }
+
         // Location data for autocomplete
         const locations = [
             "شۆرش", "شارێ یۆنانی", "کوێستان(قادسیە)", "سێوەکە", "ئارام گاردن", "کانی", 
@@ -1050,17 +1087,26 @@
         // API Status Check
         async function checkApiStatus() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/health`, {
+                // یەکەم تاقیبکە لەگەڵ /api/health
+                let healthUrl = `${API_BASE_URL}/api/health`;
+                let response = await fetch(healthUrl, {
                     method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
+                
+                // ئەگەر شکستی هێنا، تاقیبکە لەگەڵ /health
+                if (!response.ok) {
+                    healthUrl = `${API_BASE_URL}/health`;
+                    response = await fetch(healthUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                }
                 
                 if (response.ok) {
                     const result = await response.json();
                     apiStatus.className = 'api-status online';
-                    apiStatus.innerHTML = '<i class="fas fa-circle"></i> API چالاکە';
+                    apiStatus.innerHTML = `<i class="fas fa-circle"></i> API چالاکە (${new URL(healthUrl).pathname})`;
                     apiStatus.style.display = 'flex';
                     return true;
                 } else {
@@ -1068,9 +1114,16 @@
                 }
             } catch (error) {
                 apiStatus.className = 'api-status offline';
-                apiStatus.innerHTML = '<i class="fas fa-circle"></i> API ناچالاکە';
+                apiStatus.innerHTML = `<i class="fas fa-circle"></i> API ناچالاکە`;
                 apiStatus.style.display = 'flex';
                 console.warn('API ناچالاکە:', error);
+                
+                // تاقیکردنەوەی هەموو لینکەکان
+                const workingUrl = await testApiUrls();
+                if (workingUrl) {
+                    showNotification(`API لەسەر ${workingUrl} چالاکە. تکایە پەڕەکە نوێ بکەرەوە.`, 'warning');
+                }
+                
                 return false;
             }
         }
@@ -1142,8 +1195,9 @@
                     return;
                 }
                 
-                // Send request to API
-                const response = await fetch(`${API_BASE_URL}/api/requests`, {
+                // تاقیکردنەوەی هەردوو لینک
+                let apiUrl = `${API_BASE_URL}/api/requests`;
+                let response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1152,27 +1206,44 @@
                     body: JSON.stringify(formData)
                 });
                 
-                const result = await response.json();
+                // ئەگەر شکستی هێنا، تاقیبکە لەگەڵ لینکی تر
+                if (!response.ok) {
+                    apiUrl = `${API_BASE_URL}/requests`;
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                }
                 
-                if (result.success) {
-                    // Show success message
-                    showNotification('داواکاریەکەت بە سەرکەوتویی نێردرا!', 'success');
+                if (response.ok) {
+                    const result = await response.json();
                     
-                    // Hide form and show success message
-                    houseSaleForm.style.display = 'none';
-                    responseMessage.style.display = 'block';
-                    
-                    // Reset form after 10 seconds
-                    setTimeout(() => {
-                        houseSaleForm.reset();
-                        houseSaleForm.style.display = 'block';
-                        responseMessage.style.display = 'none';
-                        navigateToPage('main');
-                    }, 10000);
+                    if (result.success) {
+                        // Show success message
+                        showNotification('داواکاریەکەت بە سەرکەوتویی نێردرا!', 'success');
+                        
+                        // Hide form and show success message
+                        houseSaleForm.style.display = 'none';
+                        responseMessage.style.display = 'block';
+                        
+                        // Reset form after 10 seconds
+                        setTimeout(() => {
+                            houseSaleForm.reset();
+                            houseSaleForm.style.display = 'block';
+                            responseMessage.style.display = 'none';
+                            navigateToPage('main');
+                        }, 10000);
+                    } else {
+                        showNotification(`هەڵە: ${result.error || 'هەڵەیەکی نەناسراو ڕوویدا'}`, 'error');
+                        submitHouseSaleBtn.innerHTML = originalText;
+                        submitHouseSaleBtn.disabled = false;
+                    }
                 } else {
-                    showNotification(`هەڵە: ${result.error || 'هەڵەیەکی نەناسراو ڕوویدا'}`, 'error');
-                    submitHouseSaleBtn.innerHTML = originalText;
-                    submitHouseSaleBtn.disabled = false;
+                    throw new Error(`هەڵە: ${response.status}`);
                 }
             } catch (error) {
                 console.error('هەڵە لە ناردنی داواکاری:', error);
@@ -1207,27 +1278,39 @@
                     return;
                 }
                 
-                // Fetch advertisements from API
-                const response = await fetch(`${API_BASE_URL}/api/advertisements`, {
+                // تاقیکردنەوەی هەردوو لینک
+                let apiUrl = `${API_BASE_URL}/api/advertisements`;
+                let response = await fetch(apiUrl, {
                     method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
                 
-                const result = await response.json();
+                // ئەگەر شکستی هێنا، تاقیبکە لەگەڵ لینکی تر
+                if (!response.ok) {
+                    apiUrl = `${API_BASE_URL}/advertisements`;
+                    response = await fetch(apiUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                }
                 
-                if (result.success && result.data && result.data.length > 0) {
-                    // Display advertisements
-                    displayAdvertisements(result.data);
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    if (result.success && result.data && result.data.length > 0) {
+                        // Display advertisements
+                        displayAdvertisements(result.data);
+                    } else {
+                        advertisementsContainer.innerHTML = `
+                            <div class="no-ads">
+                                <i class="fas fa-ad" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                                <h3 style="color: #666;">هێشتا هیچ رێکلامێک نییە</h3>
+                                <p>رێکلامەکان بەم زووانە زیاد دەکرێن.</p>
+                            </div>
+                        `;
+                    }
                 } else {
-                    advertisementsContainer.innerHTML = `
-                        <div class="no-ads">
-                            <i class="fas fa-ad" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
-                            <h3 style="color: #666;">هێشتا هیچ رێکلامێک نییە</h3>
-                            <p>رێکلامەکان بەم زووانە زیاد دەکرێن.</p>
-                        </div>
-                    `;
+                    throw new Error(`هەڵە: ${response.status}`);
                 }
             } catch (error) {
                 console.error('هەڵە لە وەرگرتنی رێکلامەکان:', error);
@@ -1289,12 +1372,21 @@
         // Track Ad Click
         async function trackAdClick(adId) {
             try {
-                await fetch(`${API_BASE_URL}/api/advertisements/${adId}/click`, {
+                // تاقیکردنەوەی هەردوو لینک
+                let apiUrl = `${API_BASE_URL}/api/advertisements/${adId}/click`;
+                let response = await fetch(apiUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
+                
+                // ئەگەر شکستی هێنا، تاقیبکە لەگەڵ لینکی تر
+                if (!response.ok) {
+                    apiUrl = `${API_BASE_URL}/advertisements/${adId}/click`;
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                }
             } catch (error) {
                 console.error('هەڵە لە تۆمارکردنی کلیک:', error);
             }
@@ -1317,6 +1409,14 @@
 
         // Auto-check API status every 30 seconds
         setInterval(checkApiStatus, 30000);
+        
+        // تاقیکردنەوەی API لە کاتی بارکردن
+        setTimeout(async () => {
+            const workingUrl = await testApiUrls();
+            if (workingUrl && workingUrl !== API_BASE_URL) {
+                showNotification(`ئەگەر API کار ناکات، تکایە پەڕەکە نوێ بکەرەوە یان ${workingUrl} تاقیبکەرەوە`, 'info', 10000);
+            }
+        }, 2000);
     </script>
 </body>
 </html>
