@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بەرواری کڕین و فرۆشتی خانوو و زەوی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --transition: all 0.3s ease;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* هێدەر */
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #f1c40f;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-menu a.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* بەشە سەرەکییەکان */
+        .main-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-card:nth-child(1) {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        
+        .section-card:nth-child(2) {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+        
+        .section-card:nth-child(3) {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .section-card:nth-child(4) {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        }
+        
+        .section-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .section-desc {
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.7);
+        }
+        
+        /* فۆرمەکە */
+        .form-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin: 40px auto;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+        
+        .form-header h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: #7f8c8d;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Noto Sans Arabic', sans-serif;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+        
+        .location-search {
+            position: relative;
+        }
+        
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 10px 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+        
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .suggestion-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+            font-family: 'Noto Sans Arabic', sans-serif;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(to right, var(--success-color), #2ecc71);
+            margin-top: 20px;
+        }
+        
+        /* پەیامەکە */
+        .message-container {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin: 40px auto;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .message-icon {
+            font-size: 70px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .message-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .message-text {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        /* فووتەر */
+        footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 40px 0;
+            margin-top: 80px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+        
+        .footer-section p {
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+        
+        .footer-section i {
+            margin-left: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+        }
+        
+        /* بۆ جۆری موبایل */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                display: none;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                left: 20px;
+                top: 20px;
+            }
+            
+            .main-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-section h3::after {
+                right: 50%;
+                transform: translateX(50%);
+            }
+        }
+        
+        /* تایبەتمەندی رەنگ گۆڕین */
+        .color-change {
+            animation: colorChange 10s infinite alternate;
+        }
+        
+        @keyframes colorChange {
+            0% { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+            25% { background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); }
+            50% { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+            75% { background: linear-gradient(135deg, #fad0c4 0%, #fad0c4 100%); }
+            100% { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        }
+        
+        /* بارە دەرکەوتووەکان */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loader-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- هێدەر -->
+    <header>
+        <div class="container header-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                <span>بەرواری خانوو و زەوی</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" class="active" data-section="home">سەرەکی</a></li>
+                <li><a href="#" data-section="sell-house">فرۆشتی خانوو</a></li>
+                <li><a href="#" data-section="buy-house">کڕینی خانوو</a></li>
+                <li><a href="#" data-section="sell-land">فرۆشتی زەوی</a></li>
+                <li><a href="#" data-section="buy-land">کڕینی زەوی</a></li>
+            </ul>
+        </div>
+    </header>
+    
+    <!-- بەشە سەرەکییەکان -->
+    <div class="container">
+        <div class="main-sections" id="mainSections">
+            <div class="section-card" data-section="sell-house">
+                <div class="section-icon">
+                    <i class="fas fa-house-signal"></i>
+                </div>
+                <h3 class="section-title">فرۆشتی خانوو</h3>
+                <p class="section-desc">خانوەکەت بفرۆشە و نرخی لەسەر بنێ</p>
+            </div>
+            
+            <div class="section-card" data-section="buy-house">
+                <div class="section-icon">
+                    <i class="fas fa-house-circle-check"></i>
+                </div>
+                <h3 class="section-title">کڕینی خانوو</h3>
+                <p class="section-desc">خانوویەکی دڵخوازە بکڕە بە نرخێکی راسان</p>
+            </div>
+            
+            <div class="section-card" data-section="sell-land">
+                <div class="section-icon">
+                    <i class="fas fa-mountain-sun"></i>
+                </div>
+                <h3 class="section-title">فرۆشتی زەوی</h3>
+                <p class="section-desc">زەویەکەت بفرۆشە و سودێکی گەورە بەدەست بهێنە</p>
+            </div>
+            
+            <div class="section-card" data-section="buy-land">
+                <div class="section-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3 class="section-title">کڕینی زەوی</h3>
+                <p class="section-desc">زەویەکی گونجاو بکڕە بۆ پڕۆژەکەت</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- فۆرمی فرۆشتی خانوو -->
+    <div class="container">
+        <div class="form-container" id="sellHouseForm">
+            <div class="form-header">
+                <h2>فرۆشتی خانوو</h2>
+                <p>زانیاریەکانی خانووەکەت بنووسە بۆ فرۆشتنی</p>
+            </div>
+            
+            <form id="houseSellingForm">
+                <div class="form-group">
+                    <label class="form-label">ناوی بەرێزت :</label>
+                    <input type="text" class="form-input" id="sellerName" placeholder="ناوی خۆت بنوسە" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ژمارەی موبایلی خۆت :</label>
+                    <input type="tel" class="form-input" id="sellerPhone" placeholder="ژمارەی موبایلی خۆت بنووسە" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">شوێنەکە دیاری بکە کە خانوەکەت لێی دەفرۆشیت :</label>
+                    <div class="location-search">
+                        <input type="text" class="form-input" id="locationInput" placeholder="ناوی شوێنەکە بنوسە یان هەڵیبژێرە" required>
+                        <div class="location-suggestions" id="locationSuggestions"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">فرۆشتنی خانوو : جۆری فرۆشتنی خانوو هەڵبژێرە</label>
+                    <select class="form-select" id="sellingType" required>
+                        <option value="">هەڵبژاردنەکەت دیاری بکە</option>
+                        <option value="تاپۆ">تاپۆ</option>
+                        <option value="کارت">کارت</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">قەبارە (مەتر) : قەبارە هەڵبژێرە</label>
+                    <select class="form-select" id="houseSize" required>
+                        <option value="">قەبارەی خانوەکەت هەڵبژێرە</option>
+                        <option value="100">100 م²</option>
+                        <option value="150">150 م²</option>
+                        <option value="200">200 م²</option>
+                        <option value="250">250 م²</option>
+                        <option value="300">300 م²</option>
+                        <option value="350">350 م²</option>
+                        <option value="400">400 م²</option>
+                        <option value="450">450 م²</option>
+                        <option value="500">500 م²</option>
+                        <option value="600">600 م²</option>
+                        <option value="700">700 م²</option>
+                        <option value="800">800 م²</option>
+                        <option value="900">900 م²</option>
+                        <option value="1000">1000 م²</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">نرخی خانووەکە چەندە ؟ بە پێی رۆژ دیاری دەکرێ نرخی خانوەکە :</label>
+                    <input type="number" class="form-input" id="housePrice" placeholder="نرخی خانوەکە بنوسە بە دینار" required>
+                </div>
+                
+                <!-- بارە دەرکەوتوو -->
+                <div class="loader" id="formLoader">
+                    <div class="loader-spinner"></div>
+                    <p>داواکاریەکەت دەنێردرێت... تکایە چاوەڕوان بە</p>
+                </div>
+                
+                <button type="submit" class="btn btn-submit" id="submitBtn">
+                    <span id="submitText">ناردنی داواکاری</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- پەیامی سەرکەوتوو -->
+    <div class="container">
+        <div class="message-container" id="successMessage">
+            <div class="message-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="message-title">سوپاس بۆ ناردنی داواکاریەکەت!</h2>
+            <p class="message-text">چاوەڕوان بە هەموو زانیاریەکان بگاتە بەشی کارمەندانی کۆمپانیا. پەیوەندیمان پێوە دەکەین لە نزیکترین کاتدا.</p>
+            <p class="message-text" id="requestId" style="font-weight: bold; color: var(--primary-color); display: none;"></p>
+            <button class="btn" id="backToHome">گەڕانەوە بۆ سەرەکی</button>
+        </div>
+    </div>
+    
+    <!-- پەیامی هەڵە -->
+    <div class="container">
+        <div class="message-container" id="errorMessage" style="display: none;">
+            <div class="message-icon" style="color: var(--accent-color);">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="message-title">کێشەیەک ڕوویدا!</h2>
+            <p class="message-text" id="errorText">تکایە دووبارە هەوڵ بدەرەوە یان پەیوەندیمان پێوە بکە.</p>
+            <button class="btn" id="tryAgainBtn">هەوڵدانەوە</button>
+        </div>
+    </div>
+    
+    <!-- فووتەر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>دەربارەی ئێمە</h3>
+                    <p>ئێمە کۆمپانیایەکی تایبەتین بە کاروباری کڕین و فرۆشتی خانوو و زەوی. ئامانجمان ئەوەیە کە هاوڵاتیان یارمەتی بدەین لە کاروباری کڕین و فرۆشتنی خانوو و زەوی.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>پەیوەندیمان پێوە بکە</h3>
+                    <p><i class="fas fa-phone"></i> ٠٧٥٠ ١٢٣ ٤٥٦٧</p>
+                    <p><i class="fas fa-envelope"></i> info@house-land.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> هەولێر، هەرێمی کوردستان</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>کاتەکانی کارکردن</h3>
+                    <p>شەممە - پێنجشەممە: ٨:٠٠ - ١٨:٠٠</p>
+                    <p>هەینی: ٨:٠٠ - ١٤:٠٠</p>
+                    <p>شەممە: داخستراویە</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>هەموو مافەکان پارێزراون © ٢٠٢٣ بەرواری خانوو و زەوی</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // نیشاندانی فۆرمەکە بەپێی کلیک لەسەر کارتەکان
+        document.querySelectorAll('.section-card, .nav-menu a').forEach(element => {
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const section = this.dataset.section;
+                
+                // گۆڕینی رەنگی پاشەرەوە
+                document.body.classList.add('color-change');
+                
+                // لەخۆگرتنی هێدەر
+                document.querySelectorAll('.nav-menu a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                if (section !== 'home') {
+                    document.querySelector(`a[data-section="${section}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`a[data-section="home"]`).classList.add('active');
+                }
+                
+                // نیشاندانی فۆرمەکە
+                if (section === 'sell-house') {
+                    document.getElementById('sellHouseForm').style.display = 'block';
+                    document.getElementById('mainSections').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'none';
+                    document.getElementById('errorMessage').style.display = 'none';
+                } else if (section === 'home') {
+                    document.getElementById('sellHouseForm').style.display = 'none';
+                    document.getElementById('mainSections').style.display = 'grid';
+                    document.getElementById('successMessage').style.display = 'none';
+                    document.getElementById('errorMessage').style.display = 'none';
+                }
+            });
+        });
+        
+        // لیستی شوێنەکان
+        const locations = [
+            "شۆرش", "شارەی یۆنانی", "کوێستان(قادسیە)", "سێوەکە", "ئارام گاردن", "کانی", 
+            "ئیمپایەر رۆیاڵ ئەپارتمێنت", "خوێندنی باڵا", "قەرەبوی کارێز", "کورانی نوێ", 
+            "بەختیاری نوێ", "ئازادی بەحرکە", "برایەتی بەحرکە", "گوڵان ستی", "کۆمەڵگەی ژین (بەحرکە)", 
+            "مەلا یاسین", "ڤێلاکانی ئۆکلاند", "ئەربیل گاردن", "ڤانە تاوەرز", "ئۆلیڤ گاردن ستی", 
+            "بەحرکەی نوێ", "سەیدان B", "میراج ستی", "خەرابەدراو", "دارەبەن", "فەرمان بەرانی (بەحرکە)", 
+            "ڕاستی (بەحرکە)", "دارەتوی نوێ", "بنەسڵاوە", "ئاری", "دیلان", "99 زانکۆ", "زیلان ستی", 
+            "94 باداوە", "کارێزان", "ئەدرێس ئەربیل", "بیڤرلی هیڵز", "سەربەستی نوێ (8ی تورەق)", 
+            "سەیدان", "جديدە", "قۆپەقران", "ڵایف تاوەرز", "قەرەبووی کەلەکین", "کرێچیانی شاوێس", 
+            "قەرەبووی شاوێس", "پیشەسازی باشور", "لالاڤ سەن تاوەرز", "نیو ئیسکان", "نایس ڤیلەج", 
+            "کوین تاوەر", "شاری سانا", "چنار (شورتاوە)", "407 عنکاوە", "حاکماوا", "عەنکاوە 128", 
+            "سیمی خاتوناوە", "121 گوڵان (گوڵان 1)", "زانایان", "سەروەران", "پێشمەرگە (تاپۆ)", 
+            "ئاڵتون ستی", "سێبەردان 2", "هەڤاڵان", "دارەتوو", "ئاڵاسکا تاوەرز", "کەڕک(تاپۆ)", 
+            "گەرەسۆری کارت", "گەرەسۆر", "گەرەسۆری تەعجیل", "گوندی ئەمریکی", "هەواری شار", 
+            "دوبەی ستی", "تیمار", "ڕووناکی", "موفتی", "ئەندازیاران", "مەنتکاوە", 
+            "شادی و بەهاری نوێ", "منارە سیتی 2", "ماردین", "کوردستان", "ئایندە ستی 2", 
+            "ئایندە ستی 1", "هەولێر ستی", "فلۆرێنس تاوەر", "سینترۆ تاوەر", "ئۆزال ستی", 
+            "هیران ستی", "لانە ستی", "شاری ئەندازیاران", "ژیان ستی", "سەری بڵند", "ڕاستی (عەدالە)", 
+            "لەندەن تاوەرز", "زەیتون ستی", "رۆشنبیری 1", "ئاشۆکان", "نەورۆز (حەی عەسکەری)", 
+            "14 کونە گورگ", "مارینا 1", "مارینا 2", "مارینا 3", "فیوچەر ستی", "پێشەنگ پلەس تاوەرز", 
+            "ماس ستی", "فلۆریا ستی", "شاری هەرشەم 3", "زێڕین ستی", "ئۆلیڤ ستی", 
+            "قەرەبووی رەشکین (زەوییەکانی تێرمیناڵ)", "ڤارسان", "قەرەبوی گەنجان", "زین ستی", 
+            "ژین", "کوردستان ستی", "نۆبڵ ستی", "فیردەوس ستی", "شاری ژیانی (هاوچەرخ)", 
+            "ڤار پارک", "باغمرە شهاب", "دیپلۆماتی سەفیران", "سلاڤا ستی", "پاڤلیۆن", 
+            "گەزنەی نوێ", "قەرەبووی گرد جوتیار", "بێریات", "عەزە", "عارەب کەند", "هیوا ستی", 
+            "147 عنکاوە", "کانی قرژاڵە", "گرد جوتیار", "هەولێری نوێ", "8 حەسارۆک", "5 حەسارۆک", 
+            "فەرمان بەران", "بەختیاری", "وەزیران (پەرلەمان)", "گوندی زانکۆی نوێ", 
+            "مامۆستایانی زانکۆ", "شارەوانی"
+        ];
+        
+        // نیشاندانی پێشنیارەکانی شوێنەکان
+        const locationInput = document.getElementById('locationInput');
+        const locationSuggestions = document.getElementById('locationSuggestions');
+        
+        locationInput.addEventListener('input', function() {
+            const inputValue = this.value.toLowerCase();
+            locationSuggestions.innerHTML = '';
+            
+            if (inputValue.length > 0) {
+                const filteredLocations = locations.filter(location => 
+                    location.toLowerCase().includes(inputValue)
+                );
+                
+                if (filteredLocations.length > 0) {
+                    filteredLocations.forEach(location => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.textContent = location;
+                        div.addEventListener('click', function() {
+                            locationInput.value = this.textContent;
+                            locationSuggestions.style.display = 'none';
+                        });
+                        locationSuggestions.appendChild(div);
+                    });
+                    
+                    locationSuggestions.style.display = 'block';
+                } else {
+                    locationSuggestions.style.display = 'none';
+                }
+            } else {
+                locationSuggestions.style.display = 'none';
+            }
+        });
+        
+        // داخستنی پێشنیارەکان کاتێ کلیک لەسەر شوێنێکی تر دەکرێت
+        document.addEventListener('click', function(e) {
+            if (!locationInput.contains(e.target) && !locationSuggestions.contains(e.target)) {
+                locationSuggestions.style.display = 'none';
+            }
+        });
+        
+        // ناردنی داواکاریەکە
+        document.getElementById('houseSellingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // چالاککردنی بارە
+            showLoader(true);
+            
+            // وەرگرتنی زانیارییەکان لە فۆرمەکە
+            const formData = {
+                name: document.getElementById('sellerName').value,
+                phone: document.getElementById('sellerPhone').value,
+                location: document.getElementById('locationInput').value,
+                sellingType: document.getElementById('sellingType').value,
+                size: document.getElementById('houseSize').value + ' م²',
+                price: document.getElementById('housePrice').value + ' دینار',
+                type: 'فرۆشتی خانوو',
+                date: new Date().toLocaleString('ar-IQ'),
+                timestamp: new Date().toISOString()
+            };
+            
+            // ناردن بۆ API
+            await sendRequestToAPI(formData);
+        });
+        
+        // چالاککردن/لەکارخستنی بارە
+        function showLoader(show) {
+            const loader = document.getElementById('formLoader');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            
+            if (show) {
+                loader.style.display = 'block';
+                submitBtn.disabled = true;
+                submitText.textContent = 'ناردن...';
+                submitBtn.style.opacity = '0.7';
+            } else {
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
+                submitText.textContent = 'ناردنی داواکاری';
+                submitBtn.style.opacity = '1';
+            }
+        }
+        
+        // ناردن بۆ API
+        async function sendRequestToAPI(formData) {
+            try {
+                console.log('ناردنی داواکاری بۆ API:', formData);
+                
+                const response = await fetch('/api/submit-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                console.log('وەڵامی API:', response.status, response.statusText);
+                
+                const result = await response.json();
+                console.log('داتاکانی وەڵام:', result);
+                
+                // لەکارخستنی بارە
+                showLoader(false);
+                
+                if (result.success) {
+                    // نیشاندانی ژمارەی داواکاری
+                    if (result.systemResponse && result.systemResponse.request && result.systemResponse.request.id) {
+                        document.getElementById('requestId').textContent = 
+                            `ژمارەی داواکاری: ${result.systemResponse.request.id}`;
+                        document.getElementById('requestId').style.display = 'block';
+                    }
+                    showSuccessMessage();
+                } else {
+                    showErrorMessage(result.message || 'کێشەیەک ڕوویدا لە ناردنی داواکاری');
+                }
+            } catch (error) {
+                console.error('هەڵە لە ناردنی داواکاری:', error);
+                
+                // لەکارخستنی بارە
+                showLoader(false);
+                
+                showErrorMessage('پەیوەندی لەگەڵ سێرڤەرەکەدا شکستی هێنا. تکایە دووبارە هەوڵ بدەرەوە.');
+            }
+        }
+        
+        // نیشاندانی پەیامی سەرکەوتوو
+        function showSuccessMessage() {
+            document.getElementById('sellHouseForm').style.display = 'none';
+            document.getElementById('mainSections').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        // نیشاندانی پەیامی هەڵە
+        function showErrorMessage(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('sellHouseForm').style.display = 'none';
+            document.getElementById('mainSections').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+        
+        // گەڕانەوە بۆ سەرەکی
+        document.getElementById('backToHome').addEventListener('click', function() {
+            document.body.classList.remove('color-change');
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('mainSections').style.display = 'grid';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // ڕێستکردنی فۆرمەکە
+            document.getElementById('houseSellingForm').reset();
+            document.getElementById('requestId').style.display = 'none';
+            
+            // لەخۆگرتنی سەرەکی
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`a[data-section="home"]`).classList.add('active');
+        });
+        
+        // هەوڵدانەوەی ناردن
+        document.getElementById('tryAgainBtn').addEventListener('click', function() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('sellHouseForm').style.display = 'block';
+        });
+        
+        // بۆکسی مۆبایل
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+        
+        // تاقیکردنەوەی پەیوەندی لەگەڵ API
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/submit-request', {
+                    method: 'GET'
+                });
+                console.log('تاقیکردنەوەی API - وەڵام:', response.status);
+            } catch (error) {
+                console.warn('تاقیکردنەوەی API - کێشە:', error);
+            }
+        }
+        
+        // تاقیکردنەوەی API کاتێ پەڕە بار دەکرێت
+        document.addEventListener('DOMContentLoaded', function() {
+            testAPI();
+        });
+    </script>
+</body>
+</html>
