@@ -4,6 +4,8 @@
   "description": "API for house and land request system",
   "main": "api/requests.js",
   "scripts": {
+    "vercel-build": "echo 'No build required for serverless functions'",
+    "build": "echo 'No build required'",
     "dev": "vercel dev",
     "start": "vercel start"
   },
@@ -12,6 +14,6 @@
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"  // ⭐ گۆڕینی لە 18.x بۆ 20.x یان 22.x
   }
 }
